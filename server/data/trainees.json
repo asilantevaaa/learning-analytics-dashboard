@@ -1,0 +1,122 @@
+[
+  {
+    "id": "t1",
+    "name": "Анна Примерова",
+    "login": "demo.primerova",
+    "group": "Л1",
+    "mentor": "Иван Мастеров",
+    "lead": "Елена Лидерова",
+    "startDate": "2026-03-02",
+    "closedIS": null,
+    "fired": null,
+    "comment": ""
+  },
+  {
+    "id": "t2",
+    "name": "Сергей Тестовый",
+    "login": "demo.testov",
+    "group": "Л1",
+    "mentor": "Иван Мастеров",
+    "lead": "Елена Лидерова",
+    "startDate": "2026-03-02",
+    "closedIS": null,
+    "fired": null,
+    "comment": ""
+  },
+  {
+    "id": "t3",
+    "name": "Мария Демидова",
+    "login": "demo.demidova",
+    "group": "SSL",
+    "mentor": "Ольга Кураторова",
+    "lead": "Павел Командиров",
+    "startDate": "2026-02-16",
+    "closedIS": null,
+    "fired": null,
+    "comment": ""
+  },
+  {
+    "id": "t4",
+    "name": "Павел Образцов",
+    "login": "demo.obraztsov",
+    "group": "SSL",
+    "mentor": "Ольга Кураторова",
+    "lead": "Павел Командиров",
+    "startDate": "2026-02-16",
+    "closedIS": "2026-04-10",
+    "fired": null,
+    "comment": "Успешно завершил ИС"
+  },
+  {
+    "id": "t5",
+    "name": "Екатерина Учебная",
+    "login": "demo.uchebnaya",
+    "group": "Домены",
+    "mentor": "Дмитрий Наставников",
+    "lead": "Елена Лидерова",
+    "startDate": "2026-01-19",
+    "closedIS": null,
+    "fired": null,
+    "comment": ""
+  },
+  {
+    "id": "t6",
+    "name": "Никита Пробников",
+    "login": "demo.probnikov",
+    "group": "Домены",
+    "mentor": "Дмитрий Наставников",
+    "lead": "Елена Лидерова",
+    "startDate": "2026-01-19",
+    "closedIS": null,
+    "fired": "2026-03-06",
+    "comment": "Не вышел на нормативы по скорости"
+  },
+  {
+    "id": "t7",
+    "name": "Ольга Шаблонова",
+    "login": "demo.shablonova",
+    "group": "Л1",
+    "mentor": "Иван Мастеров",
+    "lead": "Елена Лидерова",
+    "startDate": "2026-04-13",
+    "closedIS": null,
+    "fired": null,
+    "comment": ""
+  },
+  {
+    "id": "t8",
+    "name": "Дмитрий Демонов",
+    "login": "demo.demonov",
+    "group": "SSL",
+    "mentor": "Ольга Кураторова",
+    "lead": "Павел Командиров",
+    "startDate": "2026-04-13",
+    "closedIS": null,
+    "fired": null,
+    "comment": ""
+  },
+  {
+    "id": "t9",
+    "name": "Виктория Стажёрова",
+    "login": "demo.stazherova",
+    "group": "Л1",
+    "mentor": "Иван Мастеров",
+    "lead": "Елена Лидерова",
+    "startDate": "2026-05-04",
+    "closedIS": null,
+    "fired": null,
+    "comment": ""
+  },
+  {
+    "id": "t10",
+    "name": "Артём Кейсов",
+    "login": "demo.keysov",
+    "group": "Домены",
+    "mentor": "Дмитрий Наставников",
+    "lead": "Елена Лидерова",
+    "startDate": "2026-05-04",
+    "closedIS": null,
+    "fired": null,
+    "comment": ""
+  }
+]

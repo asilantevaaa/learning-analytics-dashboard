@@ -1,0 +1,73 @@
+[
+ {
+  "title": "Jivo",
+  "href": "https://wiki.example.com/books/onboarding/chapter/jivo",
+  "pages": [
+   { "title": "Инструкция по работе с Jivo", "href": "https://wiki.example.com/books/onboarding/page/instrukciia-po-rabote-s-jivo" },
+   { "title": "Список каналов и групп для добавления новых сотрудников в Jivo", "href": "https://wiki.example.com/books/onboarding/page/spisok-kanalov-i-grupp" },
+   { "title": "Приветственное сообщение бота", "href": "https://wiki.example.com/books/onboarding/page/privetstvennoe-soobshhenie-bota" },
+   { "title": "Инструкция для оповещения об АВР для Jivo (Клауд)", "href": "https://wiki.example.com/books/onboarding/page/instrukciia-dlia-opoveshheniia-ob-avr" }
+  ]
+ },
+ {
+  "title": "Mango",
+  "href": "https://wiki.example.com/books/onboarding/chapter/mango",
+  "pages": [
+   { "title": "Новый показатель", "href": "https://wiki.example.com/books/onboarding/page/novyi-pokazatel" },
+   { "title": "Манго для менеджера", "href": "https://wiki.example.com/books/onboarding/page/mango-dlia-menedzera" },
+   { "title": "Речевая аналитика (Mango)", "href": "https://wiki.example.com/books/onboarding/page/recevaia-analitika-mango" }
+  ]
+ },
+ {
+  "title": "Staff",
+  "href": "https://wiki.example.com/books/onboarding/chapter/staff",
+  "pages": [
+   { "title": "Работа в панели Staff", "href": "https://wiki.example.com/books/onboarding/page/rabota-v-paneli-staff" },
+   { "title": "Проверка тикетов стажёров", "href": "https://wiki.example.com/books/onboarding/page/proverka-tiketov-stazerov" },
+   { "title": "Аватарка и профиль сотрудника", "href": "https://wiki.example.com/books/onboarding/page/avatarka-i-profil" }
+  ]
+ },
+ {
+  "title": "Выход стажёра на тикеты и чаты",
+  "href": "https://wiki.example.com/books/onboarding/chapter/vyxod-stazera",
+  "pages": [
+   { "title": "Выход стажёра в тикеты", "href": "https://wiki.example.com/books/onboarding/page/vyxod-stazera-v-tikety" },
+   { "title": "Выход стажёра в чаты", "href": "https://wiki.example.com/books/onboarding/page/vyxod-stazera-v-chaty" },
+   { "title": "Вывод стажёра в телефоны", "href": "https://wiki.example.com/books/onboarding/page/vyvod-stazera-v-telefony" }
+  ]
+ },
+ {
+  "title": "GPT-бот",
+  "href": "https://wiki.example.com/books/onboarding/chapter/gpt-bot",
+  "pages": [
+   { "title": "Как пользоваться GPT-ботом", "href": "https://wiki.example.com/books/onboarding/page/kak-polzovatsia-gpt-botom" },
+   { "title": "Промпты для типовых обращений", "href": "https://wiki.example.com/books/onboarding/page/prompty-dlia-tipovyx-obrashhenii" }
+  ]
+ },
+ {
+  "title": "Метрики и статистика",
+  "href": "https://wiki.example.com/books/onboarding/chapter/metriki",
+  "pages": [
+   { "title": "Работа в таблице «Обучение»", "href": "https://wiki.example.com/books/onboarding/page/rabota-v-tablice-obuchenie" },
+   { "title": "Как считается скорость", "href": "https://wiki.example.com/books/onboarding/page/kak-schitaetsia-skorost" },
+   { "title": "Как считается качество", "href": "https://wiki.example.com/books/onboarding/page/kak-schitaetsia-kachestvo" }
+  ]
+ },
+ {
+  "title": "Работа со стажёрами",
+  "href": "https://wiki.example.com/books/onboarding/chapter/rabota-so-stazerami",
+  "pages": [
+   { "title": "План работы со стажёром L1", "href": "https://wiki.example.com/books/onboarding/page/plan-raboty-so-stazerom-l1" },
+   { "title": "Что делать, если стажёр увольняется на ИС", "href": "https://wiki.example.com/books/onboarding/page/chto-delat-esli-stazer-uvolniaetsia" },
+   { "title": "Обратная связь стажёру: шаблоны", "href": "https://wiki.example.com/books/onboarding/page/obratnaia-sviaz-stazeru-shablony" }
+  ]
+ },
+ {
+  "title": "Общие вопросы",
+  "href": "https://wiki.example.com/books/onboarding/chapter/obshhie-voprosy",
+  "pages": [
+   { "title": "Доступы новых сотрудников", "href": "https://wiki.example.com/books/onboarding/page/dostupy-novyx-sotrudnikov" },
+   { "title": "Часто задаваемые вопросы", "href": "https://wiki.example.com/books/onboarding/page/chasto-zadavaemye-voprosy" }
+  ]
+ }
+]

@@ -1,0 +1,25 @@
+[
+  {
+    "id": "u1",
+    "username": "admin",
+    "passwordHash": "$2a$10$.4JMqN028A3a98QqErx.WeGIIiAhdOUxGhSrIGIJpZawz0Y44GwHq",
+    "role": "director",
+    "name": "Директор"
+  },
+  {
+    "id": "u2",
+    "username": "mentor_demo",
+    "passwordHash": "$2a$10$akFUKj45pUpq9Jb2t3TMv.4GlE3RcpscV31MJ.32wLDL0kaGNUH9.",
+    "role": "manager",
+    "name": "Иван Мастеров",
+    "mentor": "Иван Мастеров"
+  },
+  {
+    "id": "u3",
+    "username": "trainee_demo",
+    "passwordHash": "$2a$10$5hNbm9DvZ.WFnwkGC1q91O4pC97mHWiC5YBnll40fYqUuCq85Qsv2",
+    "role": "trainee",
+    "name": "Анна Примерова",
+    "login": "demo.primerova"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "startHour": 9,
+  "prelim": {
+    "dow": 5,
+    "hour": 9,
+    "min": 0,
+    "endHour": 9
+  },
+  "final": {
+    "dow": 5,
+    "hour": 19,
+    "min": 0,
+    "endHour": 18
+  }
+}

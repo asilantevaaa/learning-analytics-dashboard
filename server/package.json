@@ -1,0 +1,17 @@
+{
+  "name": "svod-obucheniya-server",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Backend proxy to Grafana: on-demand and scheduled trainee metrics collection",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "node-cron": "^3.0.3"
+  }
+}
