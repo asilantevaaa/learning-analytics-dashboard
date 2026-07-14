@@ -70,11 +70,11 @@ npm run dev                 # http://localhost:5173 (requests to /api are proxie
 is empty): username `admin`, password `admin123`. Change it from the Users
 page after logging in.
 
-The repo ships with synthetic demo data under `server/data/` (fictional
-trainees, mentors, and six weeks of metrics) so the dashboard is populated
-right after `npm install`. Connecting to a real Grafana instance requires
-network access to the host set in `GRAFANA_URL` (in the original deployment
-this was VPN-gated).
+`server/data/` is gitignored (it can hold real trainee data and a live
+Grafana token once you start using the app for real), so a fresh clone starts
+empty — add trainees from the Statistics page and boards from Settings.
+Connecting to a real Grafana instance requires network access to the host set
+in `GRAFANA_URL`.
 
 ### Production (single process)
 
@@ -171,11 +171,11 @@ npm run dev                 # http://localhost:5173 (запросы к /api пр
 `server/data/users.json` пуст): логин `admin`, пароль `admin123`. Смени его на
 странице пользователей после входа.
 
-Репозиторий поставляется с синтетическими демо-данными в `server/data/`
-(вымышленные стажёры, наставники и шесть недель метрик), поэтому дашборд
-заполнен данными сразу после `npm install`. Для подключения к реальной
-Grafana нужен сетевой доступ к хосту из `GRAFANA_URL` (в оригинальном
-деплое это было ограничено VPN).
+`server/data/` в .gitignore (там может оказаться реальная информация о
+стажёрах и живой токен Grafana после начала реального использования),
+поэтому после клонирования папка пуста — добавляй стажёров на странице
+Статистики, а борды — в Настройках. Для подключения к реальной Grafana
+нужен сетевой доступ к хосту из `GRAFANA_URL`.
 
 #### Прод (один процесс)
 

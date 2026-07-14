@@ -2,6 +2,7 @@ node_modules/
 dist/
 server/node_modules/
 server/.env
+server/data/
 tsconfig.tsbuildinfo
 .claude/settings.local.json
 *.log
