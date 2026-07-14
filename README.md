@@ -1,5 +1,7 @@
 # Learning Analytics Dashboard
 
+*[Читать на русском](README.ru.md)*
+
 Learning-analytics dashboard for onboarding & training (React + TS + Node).
 
 A tool for team leads and mentors to track new-hire onboarding: weekly progress
