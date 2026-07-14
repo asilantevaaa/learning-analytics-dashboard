@@ -101,12 +101,12 @@ export default function App() {
         label: 'Аналитика',
         items: [
           { id: 'statistics', label: 'Статистика', icon: 'chart' },
-          { id: 'settings', label: 'Настройки', icon: 'gear' },
           { id: 'users', label: 'Пользователи', icon: 'users' },
         ],
       },
       KNOWLEDGE,
       ...(traineesGroup ? [traineesGroup] : []),
+      { items: [{ id: 'settings', label: 'Настройки', icon: 'gear' }] },
     ]
   }, [user, role, trainees])
 
