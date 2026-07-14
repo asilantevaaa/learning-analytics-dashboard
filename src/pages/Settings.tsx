@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api, type Settings as S, type CronJob, type GrafanaConfig } from '../api'
+import { api, type Settings as S, type CronJob, type GrafanaConfig, type OAuthConfig } from '../api'
 import type { GrafanaBoard } from '../data/stats'
 import Icon from '../components/Icon'
 
@@ -113,6 +113,95 @@ export default function Settings() {
 
       <GrafanaConnectionCard />
       <BoardsCard />
+      <OAuthCard />
+    </div>
+  )
+}
+
+function OAuthCard() {
+  const [cfg, setCfg] = useState<OAuthConfig | null>(null)
+  const [telegramBotUsername, setTelegramBotUsername] = useState('')
+  const [telegramBotToken, setTelegramBotToken] = useState('')
+  const [googleClientId, setGoogleClientId] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+
+  useEffect(() => {
+    api.getOAuthConfig().then((c) => {
+      setCfg(c)
+      setTelegramBotUsername(c.telegramBotUsername)
+      setGoogleClientId(c.googleClientId)
+    }).catch(() => {})
+  }, [])
+
+  const flash = (ok: boolean, text: string) => {
+    setMsg({ ok, text })
+    setTimeout(() => setMsg(null), 4000)
+  }
+
+  async function save() {
+    setBusy(true)
+    setMsg(null)
+    try {
+      const saved = await api.setOAuthConfig({
+        telegramBotUsername: telegramBotUsername.trim(),
+        telegramBotToken: telegramBotToken.trim() || undefined,
+        googleClientId: googleClientId.trim(),
+      })
+      setCfg(saved)
+      setTelegramBotToken('')
+      flash(true, 'Настройки входа сохранены.')
+    } catch (e: any) {
+      flash(false, `Не сохранилось: ${e.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (!cfg) return null
+
+  return (
+    <div className="form-card" style={{ marginTop: 24 }}>
+      <div className="form-card__title">Вход через Telegram / Google</div>
+      <p className="muted" style={{ marginTop: -4 }}>
+        Заполни, чтобы на экране входа появились кнопки Telegram/Google — пользователь привязывает их
+        к своему аккаунту в разделе «Профиль» и дальше может входить без пароля.
+      </p>
+
+      {msg && (
+        <div className={'callout' + (msg.ok ? '' : ' callout--warn')}>
+          <Icon name={msg.ok ? 'check' : 'alert'} size={16} /> {msg.text}
+        </div>
+      )}
+
+      <div className="form-grid">
+        <div className="field">
+          <label>Имя Telegram-бота (без @)</label>
+          <input value={telegramBotUsername} onChange={(e) => setTelegramBotUsername(e.target.value)} placeholder="my_company_bot" />
+        </div>
+        <div className="field">
+          <label>Токен Telegram-бота</label>
+          <input
+            type="password"
+            value={telegramBotToken}
+            onChange={(e) => setTelegramBotToken(e.target.value)}
+            placeholder={cfg.telegramBotUsername ? '•••••••• (уже задан, оставь пустым, чтобы не менять)' : 'от @BotFather'}
+          />
+        </div>
+        <div className="field">
+          <label>Google Client ID</label>
+          <input value={googleClientId} onChange={(e) => setGoogleClientId(e.target.value)} placeholder="xxxxxxxx.apps.googleusercontent.com" />
+        </div>
+      </div>
+      <div className="form-card__foot">
+        <span className="muted">
+          Бот создаётся через @BotFather (/newbot, затем /setdomain); Client ID — в Google Cloud Console (OAuth
+          consent screen + Credentials).
+        </span>
+        <button className="btn" onClick={save} disabled={busy}>
+          {busy ? 'Сохраняю…' : 'Сохранить'}
+        </button>
+      </div>
     </div>
   )
 }

@@ -9,6 +9,23 @@ export async function login(username, password) {
   const users = await getUsers()
   const u = users.find((x) => x.username === username)
   if (!u || !u.passwordHash || !bcrypt.compareSync(password, u.passwordHash)) return null
+  return issueSession(u)
+}
+
+// Вход по уже привязанному Telegram/Google — привязка делается отдельно (POST /api/me/link/...),
+// пока пользователь залогинен паролем. Новых пользователей эти функции не создают.
+export async function loginByTelegramId(telegramId) {
+  const users = await getUsers()
+  const u = users.find((x) => x.telegramId === telegramId)
+  return u ? issueSession(u) : null
+}
+export async function loginByGoogleId(googleId) {
+  const users = await getUsers()
+  const u = users.find((x) => x.googleId === googleId)
+  return u ? issueSession(u) : null
+}
+
+function issueSession(u) {
   const token = randomBytes(24).toString('hex')
   sessions.set(token, u.id)
   return { token, user: publicUser(u) }
@@ -18,8 +35,17 @@ export function logout(token) {
   sessions.delete(token)
 }
 
-function publicUser(u) {
-  return { id: u.id, username: u.username, role: u.role, name: u.name || u.username, mentor: u.mentor || null, login: u.login || null }
+export function publicUser(u) {
+  return {
+    id: u.id,
+    username: u.username,
+    role: u.role,
+    name: u.name || u.username,
+    mentor: u.mentor || null,
+    login: u.login || null,
+    hasTelegram: !!u.telegramId,
+    hasGoogle: !!u.googleId,
+  }
 }
 
 // Достать пользователя по токену из заголовка Authorization: Bearer <token>.

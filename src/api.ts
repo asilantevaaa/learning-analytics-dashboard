@@ -44,6 +44,19 @@ export interface User {
   name: string
   mentor: string | null
   login: string | null
+  hasTelegram: boolean
+  hasGoogle: boolean
+}
+
+// Данные, которые присылает виджет Telegram Login после авторизации пользователя.
+export interface TelegramAuthData {
+  id: number
+  first_name: string
+  last_name?: string
+  username?: string
+  photo_url?: string
+  auth_date: number
+  hash: string
 }
 export interface UserRecord {
   id: string
@@ -86,12 +99,30 @@ export interface GrafanaConfig {
   hasToken: boolean
 }
 
+// Токен бота никогда не приходит с сервера.
+export interface OAuthConfig {
+  telegramBotUsername: string
+  googleClientId: string
+}
+
 export const api = {
   // auth
   login: (username: string, password: string) =>
     req<{ token: string; user: User }>('/api/login', { method: 'POST', body: JSON.stringify({ username, password }) }),
+  loginTelegram: (data: TelegramAuthData) =>
+    req<{ token: string; user: User }>('/api/login/telegram', { method: 'POST', body: JSON.stringify(data) }),
+  loginGoogle: (credential: string) =>
+    req<{ token: string; user: User }>('/api/login/google', { method: 'POST', body: JSON.stringify({ credential }) }),
   me: () => req<User>('/api/me'),
   logout: () => req<{ ok: boolean }>('/api/logout', { method: 'POST' }),
+  // привязка Telegram/Google к своему аккаунту (любая роль)
+  getOAuthConfig: () => req<OAuthConfig>('/api/oauth-config'),
+  setOAuthConfig: (cfg: { telegramBotUsername: string; telegramBotToken?: string; googleClientId: string }) =>
+    req<OAuthConfig>('/api/oauth-config', { method: 'PUT', body: JSON.stringify(cfg) }),
+  linkTelegram: (data: TelegramAuthData) => req<User>('/api/me/link/telegram', { method: 'POST', body: JSON.stringify(data) }),
+  unlinkTelegram: () => req<User>('/api/me/unlink/telegram', { method: 'POST' }),
+  linkGoogle: (credential: string) => req<User>('/api/me/link/google', { method: 'POST', body: JSON.stringify({ credential }) }),
+  unlinkGoogle: () => req<User>('/api/me/unlink/google', { method: 'POST' }),
   // users (director)
   getUsers: () => req<UserRecord[]>('/api/users'),
   setUsers: (list: UserRecord[]) => req<UserRecord[]>('/api/users', { method: 'PUT', body: JSON.stringify(list) }),

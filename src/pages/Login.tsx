@@ -1,12 +1,19 @@
-import { useState } from 'react'
-import { api, auth, type User } from '../api'
+import { useEffect, useState } from 'react'
+import { api, auth, type OAuthConfig, type TelegramAuthData, type User } from '../api'
 import Icon from '../components/Icon'
+import TelegramLoginButton from '../components/TelegramLoginButton'
+import GoogleLoginButton from '../components/GoogleLoginButton'
 
 export default function Login({ onLogin }: { onLogin: (u: User) => void }) {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+  const [oauth, setOauth] = useState<OAuthConfig | null>(null)
+
+  useEffect(() => {
+    api.getOAuthConfig().then(setOauth).catch(() => {})
+  }, [])
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -20,6 +27,28 @@ export default function Login({ onLogin }: { onLogin: (u: User) => void }) {
       setError(err.message || 'Ошибка входа')
     } finally {
       setBusy(false)
+    }
+  }
+
+  async function telegramAuth(data: TelegramAuthData) {
+    setError('')
+    try {
+      const { token, user } = await api.loginTelegram(data)
+      auth.set(token)
+      onLogin(user)
+    } catch (err: any) {
+      setError(err.message || 'Ошибка входа через Telegram')
+    }
+  }
+
+  async function googleAuth(credential: string) {
+    setError('')
+    try {
+      const { token, user } = await api.loginGoogle(credential)
+      auth.set(token)
+      onLogin(user)
+    } catch (err: any) {
+      setError(err.message || 'Ошибка входа через Google')
     }
   }
 
@@ -54,6 +83,14 @@ export default function Login({ onLogin }: { onLogin: (u: User) => void }) {
         <button className="btn" type="submit" disabled={busy || !username || !password} style={{ width: '100%', justifyContent: 'center' }}>
           {busy ? 'Вход…' : 'Войти'}
         </button>
+
+        {(oauth?.telegramBotUsername || oauth?.googleClientId) && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, alignItems: 'center', marginTop: 8 }}>
+            <div className="muted" style={{ fontSize: 13 }}>или войди через</div>
+            {oauth.telegramBotUsername && <TelegramLoginButton botUsername={oauth.telegramBotUsername} onAuth={telegramAuth} />}
+            {oauth.googleClientId && <GoogleLoginButton clientId={oauth.googleClientId} onCredential={googleAuth} />}
+          </div>
+        )}
       </form>
     </div>
   )

@@ -26,8 +26,11 @@ import {
   setBoards,
   getGrafanaConfig,
   setGrafanaConfig,
+  getOAuthConfig,
+  setOAuthConfig,
 } from './store.js'
-import { login, logout, userFromReq, allowedLogins, can } from './auth.js'
+import { login, logout, userFromReq, allowedLogins, can, loginByTelegramId, loginByGoogleId, publicUser } from './auth.js'
+import { verifyTelegramAuth, verifyGoogleCredential } from './oauth.js'
 
 // Оставить в снапшоте недели только разрешённые пользователю логины.
 function scopeWeek(week, logins) {
@@ -141,6 +144,31 @@ app.post('/api/login', async (req, res) => {
   res.json(result)
 })
 
+const NOT_LINKED_ERROR = 'Аккаунт не найден — сначала войди по паролю и привяжи его в разделе «Профиль».'
+
+app.post('/api/login/telegram', async (req, res) => {
+  const cfg = await getOAuthConfig()
+  if (!cfg.telegramBotToken || !verifyTelegramAuth(req.body, cfg.telegramBotToken)) {
+    return res.status(401).json({ error: 'Не удалось подтвердить вход через Telegram' })
+  }
+  const result = await loginByTelegramId(String(req.body.id))
+  if (!result) return res.status(401).json({ error: NOT_LINKED_ERROR })
+  res.json(result)
+})
+
+app.post('/api/login/google', async (req, res) => {
+  const cfg = await getOAuthConfig()
+  try {
+    const payload = cfg.googleClientId ? await verifyGoogleCredential(req.body?.credential, cfg.googleClientId) : null
+    if (!payload) return res.status(401).json({ error: 'Не удалось подтвердить вход через Google' })
+    const result = await loginByGoogleId(payload.sub)
+    if (!result) return res.status(401).json({ error: NOT_LINKED_ERROR })
+    res.json(result)
+  } catch (e) {
+    res.status(401).json({ error: 'Не удалось подтвердить вход через Google' })
+  }
+})
+
 // Привязать пользователя к запросу.
 app.use(async (req, _res, next) => {
   req.user = await userFromReq(req)
@@ -155,13 +183,13 @@ app.post('/api/logout', (req, res) => {
 
 app.get('/api/me', (req, res) => {
   if (!req.user) return res.status(401).json({ error: 'Не авторизован' })
-  const u = req.user
-  res.json({ id: u.id, username: u.username, role: u.role, name: u.name || u.username, mentor: u.mentor || null, login: u.login || null })
+  res.json(publicUser(req.user))
 })
 
-// Все /api/* (кроме login/health) требуют авторизации.
+// Публичные эндпоинты (без авторизации) — вход и то, что нужно для рендера формы входа.
+const PUBLIC_PATHS = ['/login', '/health', '/oauth-config', '/login/telegram', '/login/google']
 app.use('/api', (req, res, next) => {
-  if (req.path === '/login' || req.path === '/health') return next()
+  if (PUBLIC_PATHS.includes(req.path)) return next()
   if (!req.user) return res.status(401).json({ error: 'Не авторизован' })
   next()
 })
@@ -239,6 +267,61 @@ app.put('/api/grafana-config', requireDirector, async (req, res) => {
   const cfg = await setGrafanaConfig({ url, token })
   res.json({ url: cfg.url || '', hasToken: !!cfg.token })
 })
+
+// ===== Вход через Telegram/Google (бот-юзернейм+токен, Client ID) =====
+// GET публичный (нужен для рендера кнопок на форме входа), PUT — только руководитель.
+app.get('/api/oauth-config', async (_req, res) => {
+  const cfg = await getOAuthConfig()
+  // Токен бота наружу не отдаём — только то, что нужно для рендера кнопок входа.
+  res.json({ telegramBotUsername: cfg.telegramBotUsername || '', googleClientId: cfg.googleClientId || '' })
+})
+app.put('/api/oauth-config', requireDirector, async (req, res) => {
+  const { telegramBotUsername, telegramBotToken, googleClientId } = req.body || {}
+  const cfg = await setOAuthConfig({ telegramBotUsername, telegramBotToken, googleClientId })
+  res.json({ telegramBotUsername: cfg.telegramBotUsername || '', googleClientId: cfg.googleClientId || '' })
+})
+
+// Привязать/отвязать Telegram или Google к своему аккаунту (любая роль, только себе).
+async function linkIdentity(req, res, field, matchedId) {
+  if (matchedId == null) return res.status(401).json({ error: 'Не удалось подтвердить личность' })
+  const users = await getUsers()
+  if (users.some((u) => u.id !== req.user.id && u[field] === matchedId)) {
+    return res.status(409).json({ error: 'Этот аккаунт уже привязан к другому пользователю' })
+  }
+  const next = users.map((u) => (u.id === req.user.id ? { ...u, [field]: matchedId } : u))
+  await setUsers(next)
+  res.json(publicUser(next.find((u) => u.id === req.user.id)))
+}
+async function unlinkIdentity(req, res, field) {
+  const users = await getUsers()
+  const next = users.map((u) => {
+    if (u.id !== req.user.id) return u
+    const { [field]: _drop, ...rest } = u
+    return rest
+  })
+  await setUsers(next)
+  res.json(publicUser(next.find((u) => u.id === req.user.id)))
+}
+
+app.post('/api/me/link/telegram', async (req, res) => {
+  const cfg = await getOAuthConfig()
+  if (!cfg.telegramBotToken || !verifyTelegramAuth(req.body, cfg.telegramBotToken)) {
+    return res.status(401).json({ error: 'Не удалось подтвердить Telegram' })
+  }
+  await linkIdentity(req, res, 'telegramId', String(req.body.id))
+})
+app.post('/api/me/unlink/telegram', async (req, res) => unlinkIdentity(req, res, 'telegramId'))
+
+app.post('/api/me/link/google', async (req, res) => {
+  const cfg = await getOAuthConfig()
+  try {
+    const payload = cfg.googleClientId ? await verifyGoogleCredential(req.body?.credential, cfg.googleClientId) : null
+    await linkIdentity(req, res, 'googleId', payload?.sub ?? null)
+  } catch (e) {
+    res.status(401).json({ error: 'Не удалось подтвердить Google' })
+  }
+})
+app.post('/api/me/unlink/google', async (req, res) => unlinkIdentity(req, res, 'googleId'))
 
 // ===== Дашборды Grafana (доп. виджеты; настраивает руководитель, видят все) =====
 app.get('/api/boards', async (_req, res) => res.json(await getBoards()))

@@ -11,6 +11,7 @@ import Links from './pages/Links'
 import Faq from './pages/Faq'
 import Settings from './pages/Settings'
 import Users from './pages/Users'
+import Profile from './pages/Profile'
 import Login from './pages/Login'
 import { api, auth, setUnauthorizedHandler, type User } from './api'
 import Icon from './components/Icon'
@@ -80,9 +81,11 @@ export default function App() {
         }
       : null
 
+    const PROFILE: NavGroup = { items: [{ id: 'profile', label: 'Профиль', icon: 'user' }] }
+
     if (role === 'trainee') {
       const my = user.login ? [{ id: 'trainee:' + user.login, label: 'Моя статистика', icon: 'chart' as const }] : []
-      return [{ items: my }, LEARNING, KNOWLEDGE]
+      return [{ items: my }, LEARNING, KNOWLEDGE, PROFILE]
     }
     if (role === 'manager') {
       return [
@@ -91,6 +94,7 @@ export default function App() {
         { label: 'Аналитика', items: [{ id: 'statistics', label: 'Статистика', icon: 'chart' }] },
         KNOWLEDGE,
         ...(traineesGroup ? [traineesGroup] : []),
+        PROFILE,
       ]
     }
     // director
@@ -106,6 +110,7 @@ export default function App() {
       },
       KNOWLEDGE,
       ...(traineesGroup ? [traineesGroup] : []),
+      PROFILE,
       { items: [{ id: 'settings', label: 'Настройки', icon: 'gear' }] },
     ]
   }, [user, role, trainees])
@@ -143,6 +148,7 @@ export default function App() {
         case 'reference': return <Reference />
         case 'tables': return <Tables />
         case 'links': return <Links />
+        case 'profile': return <Profile user={user} onUserUpdate={setUser} />
         default:
           return user.login ? <Statistics focusLogin={user.login} role={role} /> : <div className="muted">Профиль не привязан к стажёру.</div>
       }
@@ -155,6 +161,7 @@ export default function App() {
       case 'statistics': return <Statistics role={role} />
       case 'settings': return role === 'director' ? <Settings /> : <Dashboard onNavigate={navigate} />
       case 'users': return role === 'director' ? <Users /> : <Dashboard onNavigate={navigate} />
+      case 'profile': return <Profile user={user} onUserUpdate={setUser} />
       case 'scripts': return <Scripts />
       case 'reference': return <Reference />
       case 'tables': return <Tables />

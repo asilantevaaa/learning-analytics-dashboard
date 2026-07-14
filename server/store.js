@@ -13,6 +13,7 @@ const SETTINGS_FILE = join(DATA_DIR, 'settings.json')
 const USERS_FILE = join(DATA_DIR, 'users.json')
 const BOARDS_FILE = join(DATA_DIR, 'boards.json')
 const GRAFANA_FILE = join(DATA_DIR, 'grafana.json')
+const OAUTH_FILE = join(DATA_DIR, 'oauth.json')
 
 async function ensureDir() {
   await mkdir(DATA_DIR, { recursive: true })
@@ -120,6 +121,20 @@ export async function setGrafanaConfig({ url, token }) {
     token: token ? String(token).trim() : cur.token || '',
   }
   return writeJson(GRAFANA_FILE, next)
+}
+
+// ===== Вход через Telegram/Google (бот-юзернейм+токен, Client ID), «Настройки» =====
+// { telegramBotUsername?, telegramBotToken?, googleClientId? }
+export const getOAuthConfig = () => readJson(OAUTH_FILE, {})
+export async function setOAuthConfig({ telegramBotUsername, telegramBotToken, googleClientId }) {
+  const cur = await getOAuthConfig()
+  const next = {
+    telegramBotUsername: telegramBotUsername !== undefined ? String(telegramBotUsername).trim() : cur.telegramBotUsername || '',
+    // Пустой токен в запросе = «не менять» (не затираем сохранённый токен бота при правке остальных полей).
+    telegramBotToken: telegramBotToken ? String(telegramBotToken).trim() : cur.telegramBotToken || '',
+    googleClientId: googleClientId !== undefined ? String(googleClientId).trim() : cur.googleClientId || '',
+  }
+  return writeJson(OAUTH_FILE, next)
 }
 
 // ===== Понедельные снапшоты =====
