@@ -12,6 +12,7 @@ const META_FILE = join(DATA_DIR, 'meta.json')
 const SETTINGS_FILE = join(DATA_DIR, 'settings.json')
 const USERS_FILE = join(DATA_DIR, 'users.json')
 const BOARDS_FILE = join(DATA_DIR, 'boards.json')
+const GRAFANA_FILE = join(DATA_DIR, 'grafana.json')
 
 async function ensureDir() {
   await mkdir(DATA_DIR, { recursive: true })
@@ -107,6 +108,19 @@ export async function setSettings(s) {
 // { id, uid, name, queueVar? }
 export const getBoards = () => readJson(BOARDS_FILE, [])
 export const setBoards = (list) => writeJson(BOARDS_FILE, Array.isArray(list) ? list : [])
+
+// ===== Подключение к Grafana (URL + токен), настраивается в «Настройках» =====
+// Приоритет над server/.env, если задано через UI. { url?, token? }
+export const getGrafanaConfig = () => readJson(GRAFANA_FILE, {})
+export async function setGrafanaConfig({ url, token }) {
+  const cur = await getGrafanaConfig()
+  const next = {
+    url: url !== undefined ? String(url).trim() : cur.url || '',
+    // Пустая строка токена в PATCH-запросе = «не менять» (чтобы не затирать сохранённый токен при простом обновлении URL).
+    token: token ? String(token).trim() : cur.token || '',
+  }
+  return writeJson(GRAFANA_FILE, next)
+}
 
 // ===== Понедельные снапшоты =====
 // weeks = { [mondayISO]: { from, to, collectedAt, rows: { [login]: {...} } } }

@@ -1,32 +1,37 @@
 // Логика обращения к Grafana API.
 // Подход: читаем JSON дашборда по UID, достаём запросы панелей и их datasource,
 // затем повторяем их через /api/ds/query с подстановкой фильтра (логины) и периода.
+import { getGrafanaConfig } from './store.js'
 
-const env = () => ({
-  url: (process.env.GRAFANA_URL || 'https://grafana.example.com').replace(/\/$/, ''),
-  token: process.env.GRAFANA_TOKEN || '',
-  queueVar: process.env.QUEUE_VAR || 'queue',
-})
+// Настройки из «Настроек» (server/data/grafana.json) приоритетнее server/.env.
+async function env() {
+  const stored = await getGrafanaConfig()
+  return {
+    url: (stored.url || process.env.GRAFANA_URL || 'https://grafana.example.com').replace(/\/$/, ''),
+    token: stored.token || process.env.GRAFANA_TOKEN || '',
+    queueVar: process.env.QUEUE_VAR || 'queue',
+  }
+}
 
-function authHeaders() {
-  const { token } = env()
+async function authHeaders() {
+  const { token } = await env()
   const h = { 'Content-Type': 'application/json', Accept: 'application/json' }
   if (token) h.Authorization = `Bearer ${token}`
   return h
 }
 
 export async function health() {
-  const { url } = env()
-  const res = await fetch(`${url}/api/health`, { headers: authHeaders() })
+  const { url } = await env()
+  const res = await fetch(`${url}/api/health`, { headers: await authHeaders() })
   const data = await res.json().catch(() => ({}))
   return { ok: res.ok, status: res.status, version: data.version, commit: data.commit }
 }
 
 // Получить JSON дашборда по UID.
 async function getDashboard(uid) {
-  const { url } = env()
+  const { url } = await env()
   const res = await fetch(`${url}/api/dashboards/uid/${encodeURIComponent(uid)}`, {
-    headers: authHeaders(),
+    headers: await authHeaders(),
   })
   if (!res.ok) throw new Error(`Дашборд ${uid}: HTTP ${res.status}`)
   const json = await res.json()
@@ -100,7 +105,7 @@ function sqlQuoteList(value) {
 
 // Выполнить запросы панели через /api/ds/query.
 async function runPanel(panel, dashboard, fromMs, toMs, login, queueVarOverride) {
-  const { url, queueVar: envQueueVar } = env()
+  const { url, queueVar: envQueueVar } = await env()
   const queueVar = queueVarOverride || envQueueVar
   const targets = (panel.targets || []).filter((t) => !t.hide)
   if (!targets.length) return { title: panel.title, type: panel.type, frames: [], skipped: 'нет запросов' }
@@ -117,7 +122,7 @@ async function runPanel(panel, dashboard, fromMs, toMs, login, queueVarOverride)
 
   const res = await fetch(`${url}/api/ds/query`, {
     method: 'POST',
-    headers: authHeaders(),
+    headers: await authHeaders(),
     body: JSON.stringify(payload),
   })
   const data = await res.json().catch(() => ({}))

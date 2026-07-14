@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { api, type Settings as S, type CronJob } from '../api'
+import { api, type Settings as S, type CronJob, type GrafanaConfig } from '../api'
 import type { GrafanaBoard } from '../data/stats'
 import Icon from '../components/Icon'
 
@@ -111,7 +111,83 @@ export default function Settings() {
         </div>
       </div>
 
+      <GrafanaConnectionCard />
       <BoardsCard />
+    </div>
+  )
+}
+
+function GrafanaConnectionCard() {
+  const [cfg, setCfg] = useState<GrafanaConfig | null>(null)
+  const [url, setUrl] = useState('')
+  const [token, setToken] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+
+  useEffect(() => {
+    api.getGrafanaConfig().then((c) => {
+      setCfg(c)
+      setUrl(c.url)
+    }).catch(() => {})
+  }, [])
+
+  const flash = (ok: boolean, text: string) => {
+    setMsg({ ok, text })
+    setTimeout(() => setMsg(null), 4000)
+  }
+
+  async function save() {
+    setBusy(true)
+    setMsg(null)
+    try {
+      const saved = await api.setGrafanaConfig(url.trim(), token.trim() || undefined)
+      setCfg(saved)
+      setToken('')
+      flash(true, 'Подключение к Grafana сохранено.')
+    } catch (e: any) {
+      flash(false, `Не сохранилось: ${e.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (!cfg) return null
+
+  return (
+    <div className="form-card" style={{ marginTop: 24 }}>
+      <div className="form-card__title">Подключение к Grafana</div>
+      <p className="muted" style={{ marginTop: -4 }}>
+        URL и API-токен используются бэкендом для сбора статистики и дашбордов. Токен хранится только
+        на сервере и никогда не отдаётся в браузер — сюда он подставляется как ••••••.
+      </p>
+
+      {msg && (
+        <div className={'callout' + (msg.ok ? '' : ' callout--warn')}>
+          <Icon name={msg.ok ? 'check' : 'alert'} size={16} /> {msg.text}
+        </div>
+      )}
+
+      <div className="form-grid">
+        <div className="field">
+          <label>URL Grafana</label>
+          <input value={url} onChange={(e) => setUrl(e.target.value)} placeholder="https://grafana.example.com" />
+        </div>
+        <div className="field">
+          <label>API-токен (service account)</label>
+          <input
+            type="password"
+            value={token}
+            onChange={(e) => setToken(e.target.value)}
+            placeholder={cfg.hasToken ? '•••••••• (уже задан, оставь пустым, чтобы не менять)' : 'glsa_…'}
+          />
+        </div>
+      </div>
+      <div className="form-card__foot">
+        <span className="muted">{cfg.hasToken ? 'Токен задан.' : 'Токен ещё не задан — сбор из Grafana работать не будет.'}</span>
+        <button className="btn" onClick={save} disabled={busy}>
+          {busy ? 'Сохраняю…' : 'Сохранить'}
+        </button>
+      </div>
     </div>
   )
 }

@@ -80,6 +80,12 @@ export interface Settings {
   final: CronJob
 }
 
+// Токен никогда не приходит с сервера — только признак, что он задан.
+export interface GrafanaConfig {
+  url: string
+  hasToken: boolean
+}
+
 export const api = {
   // auth
   login: (username: string, password: string) =>
@@ -98,6 +104,10 @@ export const api = {
   setMeta: (meta: Meta) => req<Meta>('/api/meta', { method: 'PUT', body: JSON.stringify(meta) }),
   getSettings: () => req<Settings>('/api/settings'),
   setSettings: (s: Settings) => req<Settings>('/api/settings', { method: 'PUT', body: JSON.stringify(s) }),
+  // подключение к Grafana (URL + токен, director)
+  getGrafanaConfig: () => req<GrafanaConfig>('/api/grafana-config'),
+  setGrafanaConfig: (url: string, token?: string) =>
+    req<GrafanaConfig>('/api/grafana-config', { method: 'PUT', body: JSON.stringify({ url, token }) }),
   // дашборды Grafana (доп. виджеты, настраиваются в «Настройках»)
   getBoards: () => req<GrafanaBoard[]>('/api/boards'),
   setBoards: (list: GrafanaBoard[]) => req<GrafanaBoard[]>('/api/boards', { method: 'PUT', body: JSON.stringify(list) }),

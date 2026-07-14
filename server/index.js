@@ -24,6 +24,8 @@ import {
   setUsers,
   getBoards,
   setBoards,
+  getGrafanaConfig,
+  setGrafanaConfig,
 } from './store.js'
 import { login, logout, userFromReq, allowedLogins, can } from './auth.js'
 
@@ -224,6 +226,18 @@ app.put('/api/settings', requireDirector, async (req, res) => {
   const s = await setSettings(req.body || {})
   await reschedule()
   res.json(s)
+})
+
+// ===== Подключение к Grafana (URL + токен) — только руководитель =====
+app.get('/api/grafana-config', requireDirector, async (_req, res) => {
+  const cfg = await getGrafanaConfig()
+  // Токен наружу не отдаём — только признак, что он задан.
+  res.json({ url: cfg.url || '', hasToken: !!cfg.token })
+})
+app.put('/api/grafana-config', requireDirector, async (req, res) => {
+  const { url, token } = req.body || {}
+  const cfg = await setGrafanaConfig({ url, token })
+  res.json({ url: cfg.url || '', hasToken: !!cfg.token })
 })
 
 // ===== Дашборды Grafana (доп. виджеты; настраивает руководитель, видят все) =====

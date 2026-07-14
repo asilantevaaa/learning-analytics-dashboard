@@ -2,17 +2,22 @@
 // Источники и формулы выверены по дашбордам:
 //  - тикетные метрики: дашборд поддержки, ds с тикетными событиями
 //  - скорость:        дашборд учёта времени, ds с учётом рабочего времени
+import { getGrafanaConfig } from './store.js'
 
 const DS_TICKETS = process.env.DS_TICKETS || 'ticketing-datasource-uid'
 const DS_SPEED = process.env.DS_SPEED || 'time-tracking-datasource-uid'
 
-const env = () => ({
-  url: (process.env.GRAFANA_URL || 'https://grafana.example.com').replace(/\/$/, ''),
-  token: process.env.GRAFANA_TOKEN || '',
-})
+// Настройки из «Настроек» (server/data/grafana.json) приоритетнее server/.env.
+async function env() {
+  const stored = await getGrafanaConfig()
+  return {
+    url: (stored.url || process.env.GRAFANA_URL || 'https://grafana.example.com').replace(/\/$/, ''),
+    token: stored.token || process.env.GRAFANA_TOKEN || '',
+  }
+}
 
-function authHeaders() {
-  const { token } = env()
+async function authHeaders() {
+  const { token } = await env()
   const h = { 'Content-Type': 'application/json', Accept: 'application/json' }
   if (token) h.Authorization = `Bearer ${token}`
   return h
@@ -24,7 +29,7 @@ function sqlList(logins) {
 
 // Выполнить один SQL-запрос (table) к указанному datasource. Возвращает {columns, rows}.
 async function runSql(dsUid, rawSql, fromMs, toMs) {
-  const { url } = env()
+  const { url } = await env()
   const body = {
     from: String(fromMs),
     to: String(toMs),
@@ -41,7 +46,7 @@ async function runSql(dsUid, rawSql, fromMs, toMs) {
   }
   const res = await fetch(`${url}/api/ds/query`, {
     method: 'POST',
-    headers: authHeaders(),
+    headers: await authHeaders(),
     body: JSON.stringify(body),
   })
   const data = await res.json().catch(() => ({}))
