@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { existsSync } from 'node:fs'
 import bcrypt from 'bcryptjs'
-import { health } from './grafana.js'
+import { health, collectDashboard } from './grafana.js'
 import { collectTickets, collectSpeed, collectQuality, computeSpeed } from './metrics.js'
 import {
   getTrainees,
@@ -22,6 +22,8 @@ import {
   patchWeekRow,
   getUsers,
   setUsers,
+  getBoards,
+  setBoards,
 } from './store.js'
 import { login, logout, userFromReq, allowedLogins, can } from './auth.js'
 
@@ -222,6 +224,29 @@ app.put('/api/settings', requireDirector, async (req, res) => {
   const s = await setSettings(req.body || {})
   await reschedule()
   res.json(s)
+})
+
+// ===== Дашборды Grafana (доп. виджеты; настраивает руководитель, видят все) =====
+app.get('/api/boards', async (_req, res) => res.json(await getBoards()))
+app.put('/api/boards', requireDirector, async (req, res) => {
+  const list = Array.isArray(req.body) ? req.body : req.body?.boards
+  if (!Array.isArray(list)) return res.status(400).json({ error: 'Ожидается массив бордов' })
+  res.json(await setBoards(list))
+})
+// Данные борда за период — по скоупу пользователя (директор = без фильтра по логину).
+app.get('/api/boards/:id/data', async (req, res) => {
+  const board = (await getBoards()).find((b) => b.id === req.params.id)
+  if (!board) return res.status(404).json({ error: 'Борд не найден' })
+  const from = Number(req.query.from)
+  const to = Number(req.query.to)
+  if (!Number.isFinite(from) || !Number.isFinite(to)) return res.status(400).json({ error: 'Нужны параметры from/to (мс)' })
+  try {
+    const logins = await allowedLogins(req.user)
+    const result = await collectDashboard(board.uid, logins === null ? [] : logins, from, to, board.queueVar)
+    res.json(result)
+  } catch (e) {
+    res.status(502).json({ error: String(e.message || e) })
+  }
 })
 
 // ===== Недели (чтение по скоупу) =====

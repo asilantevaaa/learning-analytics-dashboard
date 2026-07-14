@@ -18,7 +18,9 @@ import {
   daysWithUs,
 } from '../data/norms'
 import { api, type Meta } from '../api'
+import type { GrafanaBoard, DashboardResult } from '../data/stats'
 import Icon from '../components/Icon'
+import PanelFrameTable from '../components/PanelFrameTable'
 
 const GROUPS: Group[] = ['Первая линия', 'Вторая линия']
 
@@ -50,7 +52,7 @@ const monthName = (mk: string) =>
 const speedOf = (r: WeekRow) => r.speedOverride ?? r.speed
 const qualityOf = (r: WeekRow) => r.quality ?? r.qualityAuto ?? null
 
-type Tab = 'week' | 'months' | 'overview' | 'trainees'
+type Tab = 'week' | 'months' | 'overview' | 'boards' | 'trainees'
 
 export default function Statistics({ focusLogin, role }: { focusLogin?: string; role?: 'director' | 'manager' | 'trainee' } = {}) {
   const canEdit = role !== 'trainee'
@@ -212,6 +214,9 @@ export default function Statistics({ focusLogin, role }: { focusLogin?: string; 
           <button className={'tab' + (tab === 'overview' ? ' tab--on' : '')} onClick={() => setTab('overview')}>
             <Icon name="chart" size={16} /> Общая статистика
           </button>
+          <button className={'tab' + (tab === 'boards' ? ' tab--on' : '')} onClick={() => setTab('boards')}>
+            <Icon name="table" size={16} /> Дашборды
+          </button>
           {canManageTrainees && (
             <button className={'tab' + (tab === 'trainees' ? ' tab--on' : '')} onClick={() => setTab('trainees')}>
               <Icon name="users" size={16} /> Стажёры ({activeTrainees.length})
@@ -271,6 +276,101 @@ export default function Statistics({ focusLogin, role }: { focusLogin?: string; 
 
       {tab === 'months' && !focusLogin && <MonthsTab weeks={weeks} />}
       {tab === 'overview' && !focusLogin && <OverviewTab weeks={weeks} trainees={trainees} />}
+      {tab === 'boards' && !focusLogin && <BoardsTab />}
+    </div>
+  )
+}
+
+/* ===================== Дашборды Grafana (доп. виджеты) ===================== */
+function BoardsTab() {
+  const [boards, setBoards] = useState<GrafanaBoard[]>([])
+  const [boardId, setBoardId] = useState<string>('')
+  const [from, setFrom] = useState(() => localIso(new Date(Date.now() - 7 * 86400000)))
+  const [to, setTo] = useState(() => localIso(new Date()))
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [result, setResult] = useState<DashboardResult | null>(null)
+
+  useEffect(() => {
+    api.getBoards().then((list) => {
+      setBoards(list)
+      if (list.length) setBoardId(list[0].id)
+    }).catch(() => {})
+  }, [])
+
+  async function load() {
+    if (!boardId) return
+    setBusy(true)
+    setError('')
+    setResult(null)
+    try {
+      const fromMs = parseIso(from).getTime()
+      const toMs = parseIso(to).getTime() + 86400000 - 1
+      const data = await api.getBoardData(boardId, fromMs, toMs)
+      setResult(data)
+    } catch (e: any) {
+      setError(e.message || 'Не удалось загрузить данные')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (!boards.length) {
+    return (
+      <div className="muted" style={{ marginTop: 12 }}>
+        Ни один дашборд Grafana ещё не добавлен. Директор может добавить его в разделе «Настройки».
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <div className="form-grid" style={{ marginTop: 12 }}>
+        <div className="field">
+          <label>Дашборд</label>
+          <select value={boardId} onChange={(e) => setBoardId(e.target.value)}>
+            {boards.map((b) => (
+              <option key={b.id} value={b.id}>{b.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="field">
+          <label>С</label>
+          <input type="date" value={from} onChange={(e) => setFrom(e.target.value)} />
+        </div>
+        <div className="field">
+          <label>По</label>
+          <input type="date" value={to} onChange={(e) => setTo(e.target.value)} />
+        </div>
+      </div>
+      <div className="form-card__foot" style={{ padding: 0, border: 'none' }}>
+        <span className="muted">Данные тянутся напрямую из панелей выбранного дашборда Grafana.</span>
+        <button className="btn" onClick={load} disabled={busy}>
+          <Icon name="refresh" size={16} /> {busy ? 'Загружаю…' : 'Загрузить'}
+        </button>
+      </div>
+
+      {error && (
+        <div className="callout callout--warn" style={{ marginTop: 12 }}>
+          <Icon name="alert" size={16} /> {error}
+        </div>
+      )}
+
+      {result && (
+        <div style={{ marginTop: 18 }}>
+          <h2 className="section">{result.title}</h2>
+          {result.perLogin.map((lr, i) => (
+            <div key={lr.login ?? `all-${i}`} style={{ marginBottom: 20 }}>
+              <div className="chip" style={{ marginBottom: 8 }}>{lr.login ?? 'Все'}</div>
+              {lr.panels.length === 0 ? (
+                <div className="muted">На дашборде нет панелей с запросами.</div>
+              ) : (
+                lr.panels.map((p, pi) => <PanelFrameTable panel={p} key={p.title + pi} />)
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

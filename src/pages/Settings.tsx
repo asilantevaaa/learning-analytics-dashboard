@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { api, type Settings as S, type CronJob } from '../api'
+import type { GrafanaBoard } from '../data/stats'
 import Icon from '../components/Icon'
+
+const uid = () => Math.random().toString(36).slice(2, 9)
 
 const DOW = [
   { v: 1, label: 'Понедельник' },
@@ -107,6 +110,110 @@ export default function Settings() {
           </button>
         </div>
       </div>
+
+      <BoardsCard />
+    </div>
+  )
+}
+
+function BoardsCard() {
+  const [boards, setBoardsState] = useState<GrafanaBoard[]>([])
+  const [draft, setDraft] = useState({ name: '', uid: '', queueVar: '' })
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
+
+  useEffect(() => {
+    api.getBoards().then(setBoardsState).catch(() => {})
+  }, [])
+
+  const flash = (ok: boolean, text: string) => {
+    setMsg({ ok, text })
+    setTimeout(() => setMsg(null), 4000)
+  }
+
+  async function persist(next: GrafanaBoard[]) {
+    setBusy(true)
+    setBoardsState(next)
+    try {
+      await api.setBoards(next)
+      flash(true, 'Список дашбордов сохранён.')
+    } catch (e: any) {
+      flash(false, `Не сохранилось: ${e.message}`)
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const add = () => {
+    if (!draft.name.trim() || !draft.uid.trim()) return flash(false, 'Укажи название и UID дашборда')
+    const board: GrafanaBoard = { id: uid(), name: draft.name.trim(), uid: draft.uid.trim() }
+    if (draft.queueVar.trim()) board.queueVar = draft.queueVar.trim()
+    persist([...boards, board])
+    setDraft({ name: '', uid: '', queueVar: '' })
+  }
+  const remove = (id: string) => persist(boards.filter((b) => b.id !== id))
+
+  return (
+    <div className="form-card" style={{ marginTop: 24 }}>
+      <div className="form-card__title">Дашборды Grafana</div>
+      <p className="muted" style={{ marginTop: -4 }}>
+        Добавь любой дашборд Grafana по его UID — он появится доп. виджетом на вкладке «Дашборды» в
+        Статистике, отдельно от основного еженедельного сбора тикетов/скорости/качества.
+      </p>
+
+      {msg && (
+        <div className={'callout' + (msg.ok ? '' : ' callout--warn')}>
+          <Icon name={msg.ok ? 'check' : 'alert'} size={16} /> {msg.text}
+        </div>
+      )}
+
+      <div className="form-grid">
+        <div className="field">
+          <label>Название</label>
+          <input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} placeholder="Выгрузка тикетов" />
+        </div>
+        <div className="field">
+          <label>UID дашборда</label>
+          <input value={draft.uid} onChange={(e) => setDraft({ ...draft, uid: e.target.value })} placeholder="my-dashboard-uid" />
+        </div>
+        <div className="field">
+          <label>Переменная-фильтр (необязательно)</label>
+          <input value={draft.queueVar} onChange={(e) => setDraft({ ...draft, queueVar: e.target.value })} placeholder="queue" />
+        </div>
+      </div>
+      <div className="form-card__foot">
+        <span className="muted">По умолчанию используется переменная queue из общих настроек Grafana.</span>
+        <button className="btn" onClick={add} disabled={busy}>
+          <Icon name="plus" size={16} /> Добавить
+        </button>
+      </div>
+
+      {boards.length > 0 && (
+        <table className="data" style={{ marginTop: 18 }}>
+          <thead>
+            <tr>
+              <th>Название</th>
+              <th>UID</th>
+              <th>Фильтр</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {boards.map((b) => (
+              <tr key={b.id}>
+                <td style={{ fontWeight: 600 }}>{b.name}</td>
+                <td className="muted" style={{ fontFamily: 'monospace' }}>{b.uid}</td>
+                <td className="muted">{b.queueVar || '—'}</td>
+                <td style={{ textAlign: 'right' }}>
+                  <button className="tag-remove" title="Удалить" onClick={() => remove(b.id)}>
+                    <Icon name="close" size={16} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   )
 }

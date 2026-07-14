@@ -1,36 +1,14 @@
 // Данные для раздела «Статистика».
-// Демо-данные: реальные дашборды Grafana заменены заглушками.
 
-export interface GrafanaDashboard {
- key: string
- title: string
- description: string
+// Дашборд Grafana, настроенный руководителем в «Настройках» как доп. виджет
+// (см. server/store.js getBoards/setBoards, server/index.js GET/PUT /api/boards).
+export interface GrafanaBoard {
+ id: string
  uid: string
- slug: string
- // имя переменной-фильтра в дашборде (queue = логин сотрудника в рабочей панели)
- queueVar: string
+ name: string
+ // своё имя переменной-фильтра в дашборде, если отличается от глобального QUEUE_VAR (по умолчанию 'queue')
+ queueVar?: string
 }
-
-export const GRAFANA_BASE = 'https://grafana.example.com'
-
-export const GRAFANA_DASHBOARDS: GrafanaDashboard[] = [
- {
- key: 'vygruzka',
- title: 'Выгрузка тикетов (Support metrics)',
- description: 'Тикеты, ответы и скорость сотрудника за период. Основной дашборд для недельной статистики.',
- uid: 'demo-dashboard-uid-1',
- slug: 'ticket-export-support-metrics',
- queueVar: 'queue',
- },
- {
- key: 'otp-tickets',
- title: 'История тикетов',
- description: 'История тикетов сотрудника — детальный просмотр обращений за период.',
- uid: 'demo-dashboard-uid-2',
- slug: 'ticket-history',
- queueVar: 'queue',
- },
-]
 
 // Шкала дисциплины (опоздания за неделю/месяц). Источник: форма ввода статистики.
 export interface DisciplineLevel {

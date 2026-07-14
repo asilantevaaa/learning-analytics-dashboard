@@ -11,6 +11,7 @@ const WEEKS_FILE = join(DATA_DIR, 'weeks.json')
 const META_FILE = join(DATA_DIR, 'meta.json')
 const SETTINGS_FILE = join(DATA_DIR, 'settings.json')
 const USERS_FILE = join(DATA_DIR, 'users.json')
+const BOARDS_FILE = join(DATA_DIR, 'boards.json')
 
 async function ensureDir() {
   await mkdir(DATA_DIR, { recursive: true })
@@ -101,6 +102,11 @@ export async function setSettings(s) {
   }
   return writeJson(SETTINGS_FILE, next)
 }
+
+// ===== Дашборды Grafana (доп. виджеты, настраиваются в «Настройках») =====
+// { id, uid, name, queueVar? }
+export const getBoards = () => readJson(BOARDS_FILE, [])
+export const setBoards = (list) => writeJson(BOARDS_FILE, Array.isArray(list) ? list : [])
 
 // ===== Понедельные снапшоты =====
 // weeks = { [mondayISO]: { from, to, collectedAt, rows: { [login]: {...} } } }

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "b1",
+    "uid": "demo-dashboard-uid-1",
+    "name": "Выгрузка тикетов (Support metrics)"
+  },
+  {
+    "id": "b2",
+    "uid": "demo-dashboard-uid-2",
+    "name": "История тикетов"
+  }
+]

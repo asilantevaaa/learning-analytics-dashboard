@@ -1,6 +1,7 @@
 // Клиент к бэкенд-прокси. По умолчанию same-origin (/api):
 // в dev запросы проксируются Vite на localhost:8787, в проде — обслуживаются тем же сервером.
 import type { Trainee, WeekData } from './data/norms'
+import type { GrafanaBoard, DashboardResult } from './data/stats'
 
 const BASE = (import.meta.env.VITE_API_BASE as string | undefined)?.replace(/\/$/, '') || ''
 const TOKEN_KEY = 'auth-token'
@@ -97,6 +98,11 @@ export const api = {
   setMeta: (meta: Meta) => req<Meta>('/api/meta', { method: 'PUT', body: JSON.stringify(meta) }),
   getSettings: () => req<Settings>('/api/settings'),
   setSettings: (s: Settings) => req<Settings>('/api/settings', { method: 'PUT', body: JSON.stringify(s) }),
+  // дашборды Grafana (доп. виджеты, настраиваются в «Настройках»)
+  getBoards: () => req<GrafanaBoard[]>('/api/boards'),
+  setBoards: (list: GrafanaBoard[]) => req<GrafanaBoard[]>('/api/boards', { method: 'PUT', body: JSON.stringify(list) }),
+  getBoardData: (id: string, fromMs: number, toMs: number) =>
+    req<DashboardResult>(`/api/boards/${encodeURIComponent(id)}/data?from=${fromMs}&to=${toMs}`),
   weeks: () => req<Record<string, WeekData>>('/api/weeks'),
   deleteWeek: (key: string) => req<{ ok: boolean }>(`/api/week/${key}`, { method: 'DELETE' }),
   week: (key: string) => req<WeekData>(`/api/week/${key}`),

@@ -99,8 +99,9 @@ function sqlQuoteList(value) {
 }
 
 // Выполнить запросы панели через /api/ds/query.
-async function runPanel(panel, dashboard, fromMs, toMs, login) {
-  const { url, queueVar } = env()
+async function runPanel(panel, dashboard, fromMs, toMs, login, queueVarOverride) {
+  const { url, queueVar: envQueueVar } = env()
+  const queueVar = queueVarOverride || envQueueVar
   const targets = (panel.targets || []).filter((t) => !t.hide)
   if (!targets.length) return { title: panel.title, type: panel.type, frames: [], skipped: 'нет запросов' }
 
@@ -139,7 +140,8 @@ async function runPanel(panel, dashboard, fromMs, toMs, login) {
 }
 
 // Собрать данные по одному дашборду для набора логинов.
-export async function collectDashboard(uid, logins, fromMs, toMs) {
+// queueVarOverride — своё имя переменной-фильтра для этого дашборда (иначе берётся QUEUE_VAR из env).
+export async function collectDashboard(uid, logins, fromMs, toMs, queueVarOverride) {
   const dashboard = await getDashboard(uid)
   const panels = flattenPanels(dashboard.panels || [])
   const targetLogins = logins && logins.length ? logins : [null]
@@ -149,7 +151,7 @@ export async function collectDashboard(uid, logins, fromMs, toMs) {
     const panelResults = []
     for (const panel of panels) {
       try {
-        panelResults.push(await runPanel(panel, dashboard, fromMs, toMs, login))
+        panelResults.push(await runPanel(panel, dashboard, fromMs, toMs, login, queueVarOverride))
       } catch (e) {
         panelResults.push({ title: panel.title, type: panel.type, error: String(e.message || e) })
       }
@@ -160,12 +162,12 @@ export async function collectDashboard(uid, logins, fromMs, toMs) {
   return { uid, title: dashboard.title, perLogin }
 }
 
-export async function collect(uids, logins, fromMs, toMs) {
+export async function collect(uids, logins, fromMs, toMs, queueVarOverride) {
   const dashboards = []
   const errors = []
   for (const uid of uids) {
     try {
-      dashboards.push(await collectDashboard(uid, logins, fromMs, toMs))
+      dashboards.push(await collectDashboard(uid, logins, fromMs, toMs, queueVarOverride))
     } catch (e) {
       errors.push({ uid, error: String(e.message || e) })
     }
