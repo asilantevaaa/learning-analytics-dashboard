@@ -20,7 +20,7 @@ import {
 import { api, type Meta } from '../api'
 import Icon from '../components/Icon'
 
-const GROUPS: Group[] = ['Л1', 'SSL', 'Домены']
+const GROUPS: Group[] = ['Первая линия', 'Вторая линия']
 
 /* ===== даты (локальные, без UTC-сдвига) ===== */
 const localIso = (d: Date) =>
@@ -988,7 +988,7 @@ function TraineesTab({
   onChange: (t: Trainee[]) => void
   onMeta: (m: Meta) => void
 }) {
-  const empty = (): Trainee => ({ id: uid(), name: '', login: '', group: 'Л1', mentor: '', lead: '', startDate: '', comment: '' })
+  const empty = (): Trainee => ({ id: uid(), name: '', login: '', group: 'Первая линия', mentor: '', lead: '', startDate: '', comment: '' })
   const [draft, setDraft] = useState<Trainee>(empty())
   const [sub, setSub] = useState<'learning' | 'finished' | 'fired'>('learning')
   const [manageOpen, setManageOpen] = useState(false)
@@ -1030,7 +1030,7 @@ function TraineesTab({
           <Field label="Фамилия Имя">
             <input value={draft.name} onChange={(e) => setDraft({ ...draft, name: e.target.value })} placeholder="Иванов Иван" />
           </Field>
-          <Field label="Логин в Staff">
+          <Field label="Логин в панели">
             <input value={draft.login} onChange={(e) => setDraft({ ...draft, login: e.target.value })} placeholder="i.ivanov" />
           </Field>
           <Field label="Группа">

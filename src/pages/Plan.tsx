@@ -6,7 +6,7 @@ export default function Plan() {
     <div>
       <div className="page-header">
         <span className="eyebrow">Онбординг</span>
-        <h1>План работы со стажёром L1</h1>
+        <h1>План работы со стажёром первой линии</h1>
         <p>Пошаговый план обучения по неделям и дням — от первого дня до выхода с испытательного срока.</p>
       </div>
 

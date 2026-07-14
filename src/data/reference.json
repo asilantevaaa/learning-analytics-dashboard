@@ -19,10 +19,10 @@
   ]
  },
  {
-  "title": "Staff",
-  "href": "https://wiki.example.com/books/onboarding/chapter/staff",
+  "title": "Рабочая панель",
+  "href": "https://wiki.example.com/books/onboarding/chapter/panel",
   "pages": [
-   { "title": "Работа в панели Staff", "href": "https://wiki.example.com/books/onboarding/page/rabota-v-paneli-staff" },
+   { "title": "Работа в рабочей панели", "href": "https://wiki.example.com/books/onboarding/page/rabota-v-paneli" },
    { "title": "Проверка тикетов стажёров", "href": "https://wiki.example.com/books/onboarding/page/proverka-tiketov-stazerov" },
    { "title": "Аватарка и профиль сотрудника", "href": "https://wiki.example.com/books/onboarding/page/avatarka-i-profil" }
   ]
@@ -57,7 +57,7 @@
   "title": "Работа со стажёрами",
   "href": "https://wiki.example.com/books/onboarding/chapter/rabota-so-stazerami",
   "pages": [
-   { "title": "План работы со стажёром L1", "href": "https://wiki.example.com/books/onboarding/page/plan-raboty-so-stazerom-l1" },
+   { "title": "План работы со стажёром первой линии", "href": "https://wiki.example.com/books/onboarding/page/plan-raboty-so-stazerom" },
    { "title": "Что делать, если стажёр увольняется на ИС", "href": "https://wiki.example.com/books/onboarding/page/chto-delat-esli-stazer-uvolniaetsia" },
    { "title": "Обратная связь стажёру: шаблоны", "href": "https://wiki.example.com/books/onboarding/page/obratnaia-sviaz-stazeru-shablony" }
   ]

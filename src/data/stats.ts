@@ -7,7 +7,7 @@ export interface GrafanaDashboard {
  description: string
  uid: string
  slug: string
- // имя переменной-фильтра в дашборде (queue = логин в Staff)
+ // имя переменной-фильтра в дашборде (queue = логин сотрудника в рабочей панели)
  queueVar: string
 }
 

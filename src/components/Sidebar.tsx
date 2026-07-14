@@ -37,7 +37,7 @@ export default function Sidebar({ groups, current, onNavigate, open, user, onLog
         </div>
         <div>
           <div className="sidebar__title">Свод обучения</div>
-          <div className="sidebar__subtitle">Платформа наставника L1</div>
+          <div className="sidebar__subtitle">Платформа наставника поддержки</div>
         </div>
       </div>
 

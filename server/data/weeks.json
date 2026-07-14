@@ -6,7 +6,7 @@
     "rows": {
       "demo.primerova": {
         "name": "Анна Примерова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 14,
         "esche": 112,
@@ -22,7 +22,7 @@
       },
       "demo.testov": {
         "name": "Сергей Тестовый",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 14,
         "esche": 112,
@@ -38,7 +38,7 @@
       },
       "demo.demidova": {
         "name": "Мария Демидова",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 16,
         "esche": 124,
@@ -54,7 +54,7 @@
       },
       "demo.uchebnaya": {
         "name": "Екатерина Учебная",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 20,
         "esche": 148,
@@ -70,7 +70,7 @@
       },
       "demo.shablonova": {
         "name": "Ольга Шаблонова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 8,
         "esche": 76,
@@ -86,7 +86,7 @@
       },
       "demo.demonov": {
         "name": "Дмитрий Демонов",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 8,
         "esche": 76,
@@ -102,7 +102,7 @@
       },
       "demo.stazherova": {
         "name": "Виктория Стажёрова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 5,
         "esche": 58,
@@ -118,7 +118,7 @@
       },
       "demo.keysov": {
         "name": "Артём Кейсов",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 5,
         "esche": 58,
@@ -141,7 +141,7 @@
     "rows": {
       "demo.primerova": {
         "name": "Анна Примерова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 15,
         "esche": 118,
@@ -157,7 +157,7 @@
       },
       "demo.testov": {
         "name": "Сергей Тестовый",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 15,
         "esche": 118,
@@ -173,7 +173,7 @@
       },
       "demo.demidova": {
         "name": "Мария Демидова",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 17,
         "esche": 130,
@@ -189,7 +189,7 @@
       },
       "demo.uchebnaya": {
         "name": "Екатерина Учебная",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 21,
         "esche": 154,
@@ -205,7 +205,7 @@
       },
       "demo.shablonova": {
         "name": "Ольга Шаблонова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 9,
         "esche": 82,
@@ -221,7 +221,7 @@
       },
       "demo.demonov": {
         "name": "Дмитрий Демонов",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 9,
         "esche": 82,
@@ -237,7 +237,7 @@
       },
       "demo.stazherova": {
         "name": "Виктория Стажёрова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 6,
         "esche": 64,
@@ -253,7 +253,7 @@
       },
       "demo.keysov": {
         "name": "Артём Кейсов",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 6,
         "esche": 64,
@@ -276,7 +276,7 @@
     "rows": {
       "demo.primerova": {
         "name": "Анна Примерова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 16,
         "esche": 124,
@@ -292,7 +292,7 @@
       },
       "demo.testov": {
         "name": "Сергей Тестовый",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 16,
         "esche": 124,
@@ -308,7 +308,7 @@
       },
       "demo.demidova": {
         "name": "Мария Демидова",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 18,
         "esche": 136,
@@ -324,7 +324,7 @@
       },
       "demo.uchebnaya": {
         "name": "Екатерина Учебная",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 22,
         "esche": 160,
@@ -340,7 +340,7 @@
       },
       "demo.shablonova": {
         "name": "Ольга Шаблонова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 10,
         "esche": 88,
@@ -356,7 +356,7 @@
       },
       "demo.demonov": {
         "name": "Дмитрий Демонов",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 10,
         "esche": 88,
@@ -372,7 +372,7 @@
       },
       "demo.stazherova": {
         "name": "Виктория Стажёрова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 7,
         "esche": 70,
@@ -388,7 +388,7 @@
       },
       "demo.keysov": {
         "name": "Артём Кейсов",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 7,
         "esche": 70,
@@ -411,7 +411,7 @@
     "rows": {
       "demo.primerova": {
         "name": "Анна Примерова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 17,
         "esche": 130,
@@ -427,7 +427,7 @@
       },
       "demo.testov": {
         "name": "Сергей Тестовый",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 17,
         "esche": 130,
@@ -443,7 +443,7 @@
       },
       "demo.demidova": {
         "name": "Мария Демидова",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 19,
         "esche": 142,
@@ -459,7 +459,7 @@
       },
       "demo.uchebnaya": {
         "name": "Екатерина Учебная",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 23,
         "esche": 160,
@@ -475,7 +475,7 @@
       },
       "demo.shablonova": {
         "name": "Ольга Шаблонова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 11,
         "esche": 94,
@@ -491,7 +491,7 @@
       },
       "demo.demonov": {
         "name": "Дмитрий Демонов",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 11,
         "esche": 94,
@@ -507,7 +507,7 @@
       },
       "demo.stazherova": {
         "name": "Виктория Стажёрова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 8,
         "esche": 76,
@@ -523,7 +523,7 @@
       },
       "demo.keysov": {
         "name": "Артём Кейсов",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 8,
         "esche": 76,
@@ -546,7 +546,7 @@
     "rows": {
       "demo.primerova": {
         "name": "Анна Примерова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 18,
         "esche": 136,
@@ -562,7 +562,7 @@
       },
       "demo.testov": {
         "name": "Сергей Тестовый",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 18,
         "esche": 136,
@@ -578,7 +578,7 @@
       },
       "demo.demidova": {
         "name": "Мария Демидова",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 20,
         "esche": 148,
@@ -594,7 +594,7 @@
       },
       "demo.uchebnaya": {
         "name": "Екатерина Учебная",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 24,
         "esche": 160,
@@ -610,7 +610,7 @@
       },
       "demo.shablonova": {
         "name": "Ольга Шаблонова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 12,
         "esche": 100,
@@ -626,7 +626,7 @@
       },
       "demo.demonov": {
         "name": "Дмитрий Демонов",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 12,
         "esche": 100,
@@ -642,7 +642,7 @@
       },
       "demo.stazherova": {
         "name": "Виктория Стажёрова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 9,
         "esche": 82,
@@ -658,7 +658,7 @@
       },
       "demo.keysov": {
         "name": "Артём Кейсов",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 9,
         "esche": 82,
@@ -681,7 +681,7 @@
     "rows": {
       "demo.primerova": {
         "name": "Анна Примерова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 19,
         "esche": 142,
@@ -697,7 +697,7 @@
       },
       "demo.testov": {
         "name": "Сергей Тестовый",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 19,
         "esche": 142,
@@ -713,7 +713,7 @@
       },
       "demo.demidova": {
         "name": "Мария Демидова",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 21,
         "esche": 154,
@@ -729,7 +729,7 @@
       },
       "demo.uchebnaya": {
         "name": "Екатерина Учебная",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 25,
         "esche": 160,
@@ -745,7 +745,7 @@
       },
       "demo.shablonova": {
         "name": "Ольга Шаблонова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 13,
         "esche": 106,
@@ -761,7 +761,7 @@
       },
       "demo.demonov": {
         "name": "Дмитрий Демонов",
-        "group": "SSL",
+        "group": "Вторая линия",
         "mentor": "Ольга Кураторова",
         "weekNum": 13,
         "esche": 106,
@@ -777,7 +777,7 @@
       },
       "demo.stazherova": {
         "name": "Виктория Стажёрова",
-        "group": "Л1",
+        "group": "Первая линия",
         "mentor": "Иван Мастеров",
         "weekNum": 10,
         "esche": 88,
@@ -793,7 +793,7 @@
       },
       "demo.keysov": {
         "name": "Артём Кейсов",
-        "group": "Домены",
+        "group": "Вторая линия",
         "mentor": "Дмитрий Наставников",
         "weekNum": 10,
         "esche": 88,

@@ -25,7 +25,7 @@ export default function Dashboard({ onNavigate }: Props) {
       <div className="page-header">
         <span className="eyebrow">Главная</span>
         <h1>Свод обучения</h1>
-        <p>Единая платформа для наставников: онбординг стажёров L1, критерии, статистика и справочник в одном месте.</p>
+        <p>Единая платформа для наставников: онбординг стажёров поддержки, критерии, статистика и справочник в одном месте.</p>
       </div>
 
       <div className="grid grid-3" style={{ marginBottom: 32 }}>

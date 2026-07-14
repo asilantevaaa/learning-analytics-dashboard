@@ -1,13 +1,13 @@
 // Нормы и цветовые критерии недельной статистики стажёров.
 // Источник: условное форматирование листа «Статистика NEW» в таблице «Обучение».
 
-export type Group = 'Л1' | 'SSL' | 'Домены' | string
+export type Group = 'Первая линия' | 'Вторая линия' | string
 export type Tone = 'good' | 'neutral' | 'warn' | 'orange' | 'bad' | ''
 
 // Нормы скорости по неделе обучения (индекс = номер недели, 1-based, потолок 14).
-const SPEED_NORM_L1 = [0, 1.5, 2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5]
-const SPEED_NORM_SSL_DOM = [0, 1.5, 2, 3, 3, 4, 4.5, 5, 6, 7, 7.5, 8, 8, 8]
-// Норма качества (staff %) по неделе обучения.
+const SPEED_NORM_TIER1 = [0, 1.5, 2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5]
+const SPEED_NORM_TIER2 = [0, 1.5, 2, 3, 3, 4, 4.5, 5, 6, 7, 7.5, 8, 8, 8]
+// Норма качества (%) по неделе обучения.
 const QUALITY_NORM = [0, 45, 50, 60, 60, 65, 70, 75, 80, 80, 85, 85, 85, 85]
 
 const at = (arr: number[], week: number | null | undefined): number | null => {
@@ -16,7 +16,7 @@ const at = (arr: number[], week: number | null | undefined): number | null => {
 }
 
 export const speedNorm = (week: number | null, group: Group): number | null =>
-  at(group === 'Л1' ? SPEED_NORM_L1 : SPEED_NORM_SSL_DOM, week)
+  at(group === 'Первая линия' ? SPEED_NORM_TIER1 : SPEED_NORM_TIER2, week)
 export const qualityNorm = (week: number | null): number | null => at(QUALITY_NORM, week)
 
 // Цвет относительно нормы: ниже — плохо, равно — нейтрально, выше — хорошо.
@@ -72,17 +72,17 @@ export interface Trainee {
   stageDates?: Record<string, string> // даты этапов: { tickets: 'YYYY-MM-DD', ... }
 }
 
-// Этапы онбординга (чек-лист). Порядок = прогресс. Источник: план работы со стажёром L1.
+// Этапы онбординга (чек-лист). Порядок = прогресс. Источник: план работы со стажёром первой линии.
 export interface Stage {
   key: string
   label: string
   hint: string
 }
 export const STAGES: Stage[] = [
-  { key: 'course', label: 'Курс VH-стажёр / КС', hint: 'Изучение вводного курса (недели 1–2)' },
+  { key: 'course', label: 'Базовый курс поддержки', hint: 'Изучение вводного курса (недели 1–2)' },
   { key: 'tickets', label: 'Вышел на тикеты', hint: 'Работа в тикетах на проверке (~день 7)' },
-  { key: 'cowboy', label: 'Обучение VH-ковбой', hint: 'Расширение тематик (недели 3+)' },
-  { key: 'chats', label: 'Вышел в чаты', hint: 'Качество в Staff от 60% (~день 21)' },
+  { key: 'advanced', label: 'Расширенный курс', hint: 'Расширение тематик (недели 3+)' },
+  { key: 'chats', label: 'Вышел в чаты', hint: 'Качество в панели от 60% (~день 21)' },
   { key: 'phones', label: 'Вышел в телефоны', hint: 'Деловая игра и звонки (~день 26)' },
   { key: 'closed', label: 'Закрыл ИС', hint: 'Прошёл испытательный срок' },
 ]
