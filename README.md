@@ -1,6 +1,6 @@
 # Learning Analytics Dashboard
 
-*[Читать на русском](README.ru.md)*
+*[Русская версия ниже](#русская-версия) / Russian version below*
 
 Learning-analytics dashboard for onboarding & training (React + TS + Node).
 
@@ -16,6 +16,9 @@ metrics collection from Grafana.
 - **Grafana metrics collection** — the backend proxies SQL queries to Grafana
   datasources to pull ticket counts, response/transfer/delay rates, and
   work-time-weighted speed, plus quality scores from a review datasource.
+- **Configurable Grafana boards** — directors can add any other Grafana
+  dashboard by UID from Settings; it shows up as a supplementary read-only
+  widget on the Statistics page.
 - **Scheduled auto-collection** — a cron-based job collects each week's
   metrics twice (a preliminary pass Friday morning, a final pass Friday
   evening); manual edits are preserved across re-collection.
@@ -40,8 +43,8 @@ login/session (in-memory tokens, bcrypt password verification).
 `server/grafana.js` and `server/metrics.js` proxy requests to Grafana — either
 by replaying a dashboard's own panel queries, or via direct SQL against a
 Grafana MySQL datasource — so the Grafana API token never reaches the browser.
-`server/store.js` persists trainees, users, weekly snapshots, and settings as
-JSON files under `server/data/`.
+`server/store.js` persists trainees, users, weekly snapshots, boards, and
+settings as JSON files under `server/data/`.
 
 **Data flow**: browser → Express API (Bearer token auth, role-scoped) →
 either local JSON storage (`server/data/`) for trainees/weeks/settings, or a
@@ -90,3 +93,104 @@ _placeholder — add screenshots of the dashboard, weekly statistics, and plan p
 **Sanitized portfolio version** — real trainee data replaced with synthetic
 demo data; internal endpoints, hostnames, document links, and credentials
 removed.
+
+<br>
+
+---
+
+## Русская версия
+
+*[English version above](#learning-analytics-dashboard)*
+
+Панель обучения-аналитики для онбординга и обучения стажёров (React + TS + Node).
+
+Инструмент для тимлидов и наставников: отслеживание онбординга новых
+сотрудников — недельные дашборды прогресса, критерии выхода с испытательного
+срока, каталог базы знаний и автоматический сбор метрик из Grafana.
+
+### Возможности
+
+- **Дашборды прогресса стажёров** — недельная/помесячная статистика по
+  стажёру, наставнику, лиду или в целом по компании, с цветовой индикацией
+  относительно норм недели обучения.
+- **Сбор метрик из Grafana** — бэкенд проксирует SQL-запросы к datasource'ам
+  Grafana, чтобы получать количество тикетов, проценты ответов/передач/отложки
+  и скорость с учётом взвешенного рабочего времени, а также оценки качества
+  из datasource проверок.
+- **Настраиваемые дашборды Grafana** — директор может добавить любой другой
+  дашборд Grafana по UID в Настройках; он появится доп. виджетом на странице
+  Статистики.
+- **Автосбор по расписанию** — cron-задача дважды в неделю собирает метрики
+  (предварительный проход в пятницу утром, финальный — вечером); ручные
+  правки сохраняются при повторном сборе.
+- **Выгрузка в CSV** — недельные, помесячные и сводные таблицы статистики
+  экспортируются в CSV.
+- **Роли и вход** — роли директор / менеджер / стажёр, каждая видит только
+  разрешённые данные; простая токен-сессия с bcrypt-хэшированием паролей.
+- **Тёмная тема** — переключатель темы на CSS-переменных без вспышки
+  нестилизованной темы при загрузке.
+
+### Архитектура
+
+**Фронтенд** — Vite + React + TypeScript, без библиотеки роутинга: небольшой
+роутер на хэше в `src/App.tsx` сопоставляет `location.hash` с компонентами
+страниц и ограничивает навигацию по роли. Страницы — в `src/pages/*`,
+статичный контент справочника/плана — в `src/data/*`.
+
+**Бэкенд** — Express (`server/index.js`) отдаёт JSON API, раздаёт собранный
+фронтенд в проде и запускает cron-планировщик. `server/auth.js` отвечает за
+вход/сессию (токены в памяти, проверка пароля через bcrypt).
+`server/grafana.js` и `server/metrics.js` проксируют запросы к Grafana — либо
+повторяя запросы панелей самого дашборда, либо через прямой SQL к MySQL
+datasource Grafana — так что токен Grafana API никогда не попадает в браузер.
+`server/store.js` хранит стажёров, пользователей, недельные снапшоты, борды и
+настройки в виде JSON-файлов в `server/data/`.
+
+**Поток данных**: браузер → Express API (авторизация по Bearer-токену, с
+учётом роли) → либо локальное JSON-хранилище (`server/data/`) для
+стажёров/недель/настроек, либо проксированный запрос к Grafana (`GRAFANA_URL`
++ `GRAFANA_TOKEN`) для сбора метрик. Собранные недели кэшируются как
+JSON-снапшоты, чтобы дашборд не запрашивал Grafana заново при каждой загрузке
+страницы.
+
+### Быстрый старт
+
+```bash
+# 1. Бэкенд
+cd server
+npm install
+cp .env.example .env        # заполни GRAFANA_URL / GRAFANA_TOKEN / UID datasource'ов
+npm run dev                 # http://localhost:8787
+
+# 2. Фронтенд (в другом терминале, из корня репозитория)
+npm install
+npm run dev                 # http://localhost:5173 (запросы к /api проксируются на 8787)
+```
+
+**Демо-вход** (создаётся автоматически при первом запуске, если
+`server/data/users.json` пуст): логин `admin`, пароль `admin123`. Смени его на
+странице пользователей после входа.
+
+Репозиторий поставляется с синтетическими демо-данными в `server/data/`
+(вымышленные стажёры, наставники и шесть недель метрик), поэтому дашборд
+заполнен данными сразу после `npm install`. Для подключения к реальной
+Grafana нужен сетевой доступ к хосту из `GRAFANA_URL` (в оригинальном
+деплое это было ограничено VPN).
+
+#### Прод (один процесс)
+
+```bash
+npm install && npm run build      # собрать фронтенд в dist/
+cd server && npm install && npm start
+# И сайт, и API отдаются с http://localhost:8787 (same-origin, без CORS).
+```
+
+### Скриншоты
+
+_плейсхолдер — добавь сюда скриншоты дашборда, недельной статистики и плана онбординга._
+
+---
+
+**Санитизированная портфолио-версия** — реальные данные стажёров заменены
+синтетическими демо-данными; внутренние эндпоинты, хосты, ссылки на документы
+и учётные данные удалены.
